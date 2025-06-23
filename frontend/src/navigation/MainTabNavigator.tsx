@@ -1,4 +1,5 @@
-// src/navigation/MainTabNavigator.tsx (최종 완성본)
+// src/navigation/MainTabNavigator.tsx
+
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -12,16 +13,18 @@ import MoreScreen from '../screens/MoreScreen';
 
 const Tab = createBottomTabNavigator();
 
-// 중앙의 커스텀 버튼 컴포넌트
-const CustomTabBarButton = ({ children, onPress }) => (
+// 중앙의 커스텀 버튼 컴포넌트 (onLongPress prop 추가)
+const CustomTabBarButton = ({ children, onPress, onLongPress }) => (
   <TouchableOpacity
     style={{
-      top: -25, // 버튼이 위로 떠 있는 정도
+      top: -25,
       justifyContent: 'center',
       alignItems: 'center',
       ...styles.shadow
     }}
     onPress={onPress}
+    onLongPress={onLongPress} // 길게 누르기 이벤트 핸들러 연결
+    activeOpacity={0.8}
   >
     <View style={{
       width: 70,
@@ -38,8 +41,8 @@ const MainTabNavigator = ({ navigation }) => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarShowLabel: true, // 글씨가 보이도록 다시 켭니다.
-        tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 }, // 라벨 스타일
+        tabBarShowLabel: true,
+        tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
         tabBarStyle: {
           position: 'absolute',
           bottom: 25,
@@ -47,12 +50,12 @@ const MainTabNavigator = ({ navigation }) => {
           right: 20,
           backgroundColor: '#ffffff',
           borderRadius: 15,
-          height: 80, // 높이를 살짝 늘립니다.
+          height: 80,
           ...styles.shadow
         },
         tabBarActiveTintColor: '#6366F1',
         tabBarInactiveTintColor: 'gray',
-        headerShown: true, // 모든 탭에 기본 헤더를 보여줍니다.
+        headerShown: true,
       }}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{
@@ -67,12 +70,13 @@ const MainTabNavigator = ({ navigation }) => {
       {/* 중앙의 기록하기 버튼 */}
       <Tab.Screen
         name="Record"
-        // 이 화면은 실제로 보여주지 않을 것이므로 빈 컴포넌트를 연결합니다.
         component={() => null} 
         options={{
-          // 아이콘과 라벨을 버튼 안에 직접 만듭니다.
           tabBarButton: () => (
-            <CustomTabBarButton onPress={() => navigation.navigate('RecordVoice')}>
+            <CustomTabBarButton
+              onPress={() => navigation.navigate('RecordVoice')} // 짧게 누르면 음성 녹음
+              onLongPress={() => navigation.navigate('TextEntry')} // 길게 누르면 텍스트 입력
+            >
                 <Icon name="plus" color="#FFF" size={30} style={{alignSelf: 'center', marginTop: 20}} />
             </CustomTabBarButton>
           ),
