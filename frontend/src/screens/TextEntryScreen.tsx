@@ -1,35 +1,28 @@
 // src/screens/TextEntryScreen.tsx
-
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect, useState } from 'react';
-import {
-  StyleSheet,
-  SafeAreaView,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
-import { RootStackNavigationProp } from '../../App'; // App.tsx의 타입을 가져옵니다.
+import { StyleSheet, SafeAreaView, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, Text } from 'react-native';
+import { RootStackNavigationProp } from '../../App';
+import { useDiary } from '../context/DiaryContext'; // useDiary 훅을 import 합니다.
 
 const TextEntryScreen = () => {
   const navigation = useNavigation<RootStackNavigationProp>();
   const [text, setText] = useState('');
+  const { addEntry } = useDiary(); // addEntry 함수를 가져옵니다.
 
   const handleSave = () => {
-    console.log('Saved Text:', text);
-    // TODO: 실제 저장 로직 구현
-    navigation.goBack();
+    if (text.trim().length > 0) {
+      // addEntry 함수를 호출하여 새 일기를 추가합니다.
+      addEntry({ summary: text });
+      navigation.goBack(); // 저장 후 이전 화면으로 돌아갑니다.
+    }
   };
 
-  // useLayoutEffect를 사용하여 navigation 옵션을 동적으로 설정합니다.
-  // 이렇게 하면 헤더의 버튼이 화면 내부의 상태(text)에 접근할 수 있습니다.
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={handleSave} disabled={text.length === 0}>
-          <Text style={[styles.headerButton, { fontWeight: 'bold', opacity: text.length === 0 ? 0.5 : 1 }]}>
+        <TouchableOpacity onPress={handleSave} disabled={text.trim().length === 0}>
+          <Text style={[styles.headerButton, { fontWeight: 'bold', opacity: text.trim().length === 0 ? 0.5 : 1 }]}>
             완료
           </Text>
         </TouchableOpacity>

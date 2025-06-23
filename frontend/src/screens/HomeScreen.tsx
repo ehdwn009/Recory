@@ -1,49 +1,29 @@
 // src/screens/HomeScreen.tsx
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
-import MemoryCard from '../components/MemoryCard'; // 방금 만든 카드 컴포넌트 불러오기
+import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
+import MemoryCard from '../components/MemoryCard';
+import { useDiary } from '../context/DiaryContext'; // useDiary 훅을 import 합니다.
 
-// 화면 테스트를 위한 가짜 데이터(Mock Data)
-const mockMemories = [
-  {
-    id: '1',
-    date: '2025년 6월 22일',
-    summary: '친구들과 함께한 강릉 여행, 파도 소리가 아직도 귓가에 맴도는 것 같다. 정말 즐거운 하루!',
-    imageUrl: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=2070&auto=format&fit=crop',
-  },
-  {
-    id: '2',
-    date: '2025년 6월 20일',
-    summary: '프로젝트 마감 때문에 힘들었지만, 멋지게 해낸 나 자신에게 칭찬해주고 싶은 날. 동료들과 마신 커피가 유난히 달았다.',
-    imageUrl: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop',
-  },
-  {
-    id: '3',
-    date: '2025년 6월 18일',
-    summary: '오랜만에 혼자만의 시간을 가졌다. 카페에 앉아 책을 읽고, 생각을 정리하는 소중한 시간이었다. 재충전 완료!',
-    imageUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=2073&auto=format&fit=crop',
-  },
-];
-
-// navigation 프롭스를 받습니다.
 const HomeScreen = ({ navigation }) => {
-  // 카드를 렌더링하는 부분을 함수로 분리합니다.
+  // useDiary 훅을 사용하여 중앙 저장소의 데이터를 가져옵니다.
+  const { entries } = useDiary();
+
+  // renderMemoryItem 함수를 수정합니다.
   const renderMemoryItem = ({ item }) => (
-    <TouchableOpacity 
+    // 불필요한 TouchableOpacity를 제거하고 MemoryCard에 onPress prop을 직접 전달합니다.
+    <MemoryCard 
+      item={item} 
       onPress={() => navigation.navigate('DiaryDetail', { diary: item })}
-    >
-      <MemoryCard item={item} />
-    </TouchableOpacity>
+    />
   );
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <FlatList
-        data={mockMemories}
+        data={entries}
         keyExtractor={item => item.id}
-        renderItem={renderMemoryItem} // 수정한 렌더링 함수를 연결
+        renderItem={renderMemoryItem}
         contentContainerStyle={styles.listContainer}
-        // 리스트의 맨 위에 AI 스마트 프롬프트를 추가합니다.
         ListHeaderComponent={
           <View style={styles.promptContainer}>
             <Text style={styles.promptText}>"오늘 기억에 남는 순간을 들려주세요."</Text>
@@ -57,11 +37,11 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F4F4F9', // 배경색을 약간 변경
+    backgroundColor: '#F4F4F9',
   },
   listContainer: {
     padding: 20,
-    paddingBottom: 120, // 하단 탭 바에 가려지지 않도록 충분한 패딩 추가
+    paddingBottom: 120,
   },
   promptContainer: {
     backgroundColor: '#E8E8FF',
