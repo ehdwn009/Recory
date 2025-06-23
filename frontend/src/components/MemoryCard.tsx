@@ -1,9 +1,7 @@
-// src/components/MemoryCard.tsx
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
-// 카드가 받을 데이터의 타입을 정의합니다.
 type MemoryCardProps = {
   item: {
     id: string;
@@ -11,11 +9,12 @@ type MemoryCardProps = {
     summary: string;
     imageUrl: string;
   };
+  onPress: () => void;
 };
 
-const MemoryCard = ({ item }: MemoryCardProps) => {
+const MemoryCard = ({ item, onPress }: MemoryCardProps) => {
   return (
-    <TouchableOpacity style={styles.cardContainer}>
+    <TouchableOpacity style={styles.cardContainer} onPress={onPress}>
       <Image source={{ uri: item.imageUrl }} style={styles.cardImage} />
       <View style={styles.cardContent}>
         <Text style={styles.cardDate}>{item.date}</Text>

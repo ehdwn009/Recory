@@ -1,4 +1,4 @@
-// App.tsx (수정)
+// App.tsx
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -6,13 +6,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import PermissionScreen from './src/screens/PermissionScreen';
 import MainTabNavigator from './src/navigation/MainTabNavigator';
-import RecordVoiceScreen from './src/screens/RecordVoiceScreen'; // 음성 녹음 화면 추가
+import RecordVoiceScreen from './src/screens/RecordVoiceScreen';
+import DiaryDetailScreen from './src/screens/DiaryDetailScreen';
 
 type RootStackParamList = {
   Onboarding: undefined;
   Permission: undefined;
   MainApp: undefined;
-  RecordVoice: undefined; // 음성 녹음 화면 스택에 등록
+  RecordVoice: undefined;
+  DiaryDetail: { diary: any };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -20,7 +22,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
-      {/* 이제 모든 화면 이동은 Stack Navigator가 관리합니다. */}
       <Stack.Navigator initialRouteName="Onboarding">
         <Stack.Screen
           name="Onboarding"
@@ -37,18 +38,24 @@ function App(): React.JSX.Element {
           component={MainTabNavigator}
           options={{ headerShown: false }}
         />
-        {/* 음성 녹음 화면을 별도의 스크린으로 등록 */}
         <Stack.Screen
           name="RecordVoice"
           component={RecordVoiceScreen}
           options={{
-            presentation: 'modal', // 화면이 아래에서 위로 올라오는 효과
+            presentation: 'modal',
             title: '기록하기',
+          }}
+        />
+        <Stack.Screen
+          name="DiaryDetail"
+          component={DiaryDetailScreen}
+          options={{ 
+            title: '기록 보기',
+            headerBackTitleVisible: false,
           }}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
 export default App;
