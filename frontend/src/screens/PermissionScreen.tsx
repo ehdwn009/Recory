@@ -2,8 +2,22 @@
 
 import React from 'react';
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const PermissionScreen = () => {
+// 네비게이션 타입을 추가합니다.
+type RootStackParamList = {
+  Onboarding: undefined;
+  Permission: undefined;
+  MainApp: undefined;
+};
+type Props = NativeStackScreenProps<RootStackParamList, 'Permission'>;
+
+const PermissionScreen = ({ navigation }: Props) => {
+  const handleGrantPermission = () => {
+    // 메인 앱 화면으로 이동하고, 현재 화면(Permission)은 스택에서 제거합니다.
+    navigation.replace('MainApp');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -14,7 +28,7 @@ const PermissionScreen = () => {
           <Text style={styles.bold}>마이크</Text>와 <Text style={styles.bold}>사진첩</Text> 접근 권한이 필요해요.
         </Text>
       </View>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleGrantPermission}>
         <Text style={styles.buttonText}>권한 허용하기</Text>
       </TouchableOpacity>
     </SafeAreaView>
